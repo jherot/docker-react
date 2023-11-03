@@ -1,9 +1,23 @@
-sudo: required
-services:
-  - docker
+version: 2.1
 
-before_install:
-  - docker build -t jherot/docker-react -f Dockerfile.dev .
+# Define the jobs we want to run for this project
+jobs:
+  build:
+    docker:
+      - image: cimg/base:2023.03
+    steps:
+      - checkout
+      - run: echo "this is the build job"
+  test:
+    docker:
+      - image: cimg/base:2023.03
+    steps:
+      - checkout
+      - run: echo "this is the test job"
 
-script:
-  - docker run -e CI=true jherot/docker-react npm run test -- --coverage
+# Orchestrate our job run sequence
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test
